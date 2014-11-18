@@ -169,6 +169,7 @@ $.fn.stick_in_parent = (opts={}) ->
               elm.width() + "px"
 
             elm.css(css).addClass(sticky_class)
+            spacer.width(css.width)
 
             unless manual_spacer?
               elm.after(spacer)
