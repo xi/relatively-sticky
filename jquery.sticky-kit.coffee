@@ -155,7 +155,7 @@ $.fn.stick_in_parent = (opts={}) ->
             fixed = true
             css = {
               position: "fixed"
-              top: offset
+              top: offset + "px"
             }
 
             css.width = if elm.css("box-sizing") == "border-box"
