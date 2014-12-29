@@ -97,7 +97,7 @@ $.fn.stick_in_parent = (opts={}) ->
       return if height == parent_height
 
       last_pos = undefined
-      offset = offset_top
+      offset = offset_top + win_top()
 
       recalc_counter = recalc_every
 
@@ -130,7 +130,7 @@ $.fn.stick_in_parent = (opts={}) ->
           # unfixing
           if scroll < top
             fixed = false
-            offset = offset_top
+            offset = offset_top + win_top()
 
             unless manual_spacer?
               if el_float == "left" || el_float == "right"
@@ -152,7 +152,7 @@ $.fn.stick_in_parent = (opts={}) ->
               unless bottomed
                 offset -= delta
                 offset = Math.max win_height - height, offset
-                offset = Math.min offset_top, offset
+                offset = Math.min offset_top + win_top(), offset
 
                 if fixed
                   elm.css {
@@ -162,8 +162,6 @@ $.fn.stick_in_parent = (opts={}) ->
         else
           # fixing
           if scroll > top
-            offset += win_top()
-
             fixed = true
             css = {
               position: "fixed"
