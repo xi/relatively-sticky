@@ -25,6 +25,14 @@ $.fn.stick_in_parent = (opts={}) ->
 
   enable_bottoming = true unless enable_bottoming?
 
+  win_top = ->
+    if scrolling_parent
+      border_top = parseInt win.css("border-top-width"), 10
+      padding_top = parseInt win.css("padding-top"), 10
+      return win.offset().top + padding_top + border_top
+    else
+      return 0
+
   for elm in @
     ((elm, padding_bottom, parent_top, parent_height, top, height, el_float, detached) ->
       return if elm.data "sticky_kit"
@@ -69,8 +77,7 @@ $.fn.stick_in_parent = (opts={}) ->
 
           restore = true
 
-        top = elm.offset().top - (parseInt(elm.css("margin-top"), 10) or 0) - offset_top
-        top = (top - win.offset().top) if scrolling_parent
+        top = elm.offset().top - (parseInt(elm.css("margin-top"), 10) or 0) - offset_top - win_top()
 
         height = elm.outerHeight true
 
@@ -155,7 +162,7 @@ $.fn.stick_in_parent = (opts={}) ->
         else
           # fixing
           if scroll > top
-            offset += win.offset().top if scrolling_parent
+            offset += win_top()
 
             fixed = true
             css = {
