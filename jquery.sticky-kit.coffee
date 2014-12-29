@@ -16,27 +16,28 @@ $.fn.stick_in_parent = (opts={}) ->
     scrolling_parent: scrolling_parent
   } = opts
 
-  win = $ window
   offset_top ?= 0
   parent_selector ?= undefined
   inner_scrolling ?= true
   sticky_class ?= "is_stuck"
-  win = scrolling_parent if scrolling_parent
 
   enable_bottoming = true unless enable_bottoming?
-
-  win_top = ->
-    if scrolling_parent
-      border_top = parseInt win.css("border-top-width"), 10
-      padding_top = parseInt win.css("padding-top"), 10
-      return win.offset().top + padding_top + border_top
-    else
-      return 0
 
   for elm in @
     ((elm, padding_bottom, parent_top, parent_height, top, height, el_float, detached) ->
       return if elm.data "sticky_kit"
       elm.data "sticky_kit", true
+
+      win = $ window
+      win = elm.parent().closest(scrolling_parent) if scrolling_parent
+
+      win_top = ->
+        if scrolling_parent
+          border_top = parseInt win.css("border-top-width"), 10
+          padding_top = parseInt win.css("padding-top"), 10
+          return win.offset().top + padding_top + border_top
+        else
+          return 0
 
       parent = elm.parent()
       parent = parent.closest(parent_selector) if parent_selector?
