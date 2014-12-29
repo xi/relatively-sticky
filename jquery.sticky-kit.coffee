@@ -207,7 +207,7 @@ $.fn.stick_in_parent = (opts={}) ->
         detached = true
         win.off "touchmove", tick
         win.off "scroll", tick
-        win.off "resize", recalc_and_tick
+        $(window).off "resize", recalc_and_tick
 
         $(document.body).off "sticky_kit:recalc", recalc_and_tick
         elm.off "sticky_kit:detach", detach
@@ -232,7 +232,7 @@ $.fn.stick_in_parent = (opts={}) ->
 
       win.on "touchmove", tick
       win.on "scroll", tick
-      win.on "resize", recalc_and_tick
+      $(window).on "resize", recalc_and_tick
       $(document.body).on "sticky_kit:recalc", recalc_and_tick
       elm.on "sticky_kit:detach", detach
 
