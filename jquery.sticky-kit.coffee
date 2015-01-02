@@ -54,11 +54,9 @@ $.fn.stick_in_parent = (opts={}) ->
 
       _top = 0
 
-      elm.css("position", "relative")
+      elm.css "position", "relative"
 
-      tick = ->
-        return if detached
-
+      get_max = ->
         #           | +--------------+
         #           | |    border    |
         #  original | +--------------+
@@ -84,31 +82,33 @@ $.fn.stick_in_parent = (opts={}) ->
         #             |    border    |
         #             +--------------+
 
+        padding_bottom = parseInt parent.css("padding-bottom"), 10
+        border_bottom = parseInt parent.css("border-bottom-width"), 10
+        margin_top = parseInt elm.css("margin-top"), 10
+
+        return parent.outerHeight() - (elm.outerHeight(true) - margin_top) - padding_bottom - border_bottom
+
+      tick = ->
+        return if detached
+
         fixed_old = fixed
         bottomed_old = bottomed
 
-        padding_bottom = parseInt parent.css("padding-bottom"), 10
-        border_bottom = parseInt parent.css("border-bottom-width"), 10
-
         margin_top = parseInt elm.css("margin-top"), 10
-
         original_top = top(elm, parent) - _top
 
-        _top = top(scrollable, parent) + offset_top + margin_top - original_top
+        _top = top(scrollable, parent) + offset_top + margin_top
         if enable_bottoming
-          old = _top
-          _top = Math.min(_top, parent.outerHeight() - original_top - elm.outerHeight(true) + margin_top - padding_bottom - border_bottom)
-          bottomed = _top != old
-        _top = Math.max(_top, 0)
+          max = get_max()
+          _top = max if bottomed = _top >= max
+        _top = Math.max(_top - original_top, 0)
 
-        fixed = _top != 0
+        elm.css "top", _top
 
-        if fixed
+        if (fixed = _top != 0)
             elm.addClass(sticky_class)
         else
             elm.removeClass(sticky_class)
-
-        elm.css("top", _top)
 
         # trigger events
         if !fixed && fixed_old
@@ -137,16 +137,12 @@ $.fn.stick_in_parent = (opts={}) ->
 
         elm.css {
           position: ""
-          bottom: ""
           top: ""
         }
-
-        parent.css "position", ""
 
         if fixed
           elm.removeClass sticky_class
 
-      parent.css "position", "relative"
       win.on "touchmove", tick
       win.on "scroll", tick
       win.on "resize", tick
