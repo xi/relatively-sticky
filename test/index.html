@@ -45,6 +45,10 @@
       border: 1px solid rgb(0,255,255);
     }
 
+    .item.fluid {
+        min-width: 30%;
+    }
+
     .clearfix {
       overflow: hidden;
       display: block;
@@ -77,6 +81,12 @@
       z-index: 100;
     }
 
+    .wrapper {
+        border: 2em solid blue;
+        height: 300px;
+        overflow-y: auto;
+    }
+
   </style>
 
   <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
@@ -106,19 +116,18 @@
   <div class="item full"></div>
 </div>
 
-<h1>Inner Scroll</h1>
-<div class="container one">
-  <div class="item threequarter"></div>
-  <div class="item full"></div>
-  <div class="item onefive"></div>
-  <div class="item triple"></div>
-</div>
-
 <h1>Borders/Margins/Padding</h1>
 <div class="container one borders">
   <div class="item"></div>
   <div class="item half"></div>
   <div class="item full"></div>
+</div>
+
+<h1>Item Borders/Margins/Padding</h1>
+<div class="container one">
+  <div class="item borders"></div>
+  <div class="item half borders"></div>
+  <div class="item full borders"></div>
 </div>
 
 <h1>Right Align</h1>
@@ -175,28 +184,25 @@
   <div class="item full"></div>
 </div>
 
-
-<h1>Custom Spacer Block</h1>
-<div class="container one">
-  <div class="manual_spacer">
-    <div class="item block use_manual"></div>
+<h1>scrollable</h1>
+<div class="wrapper">
+  <div class="container one wrapped">
+    <div class="item"></div>
+    <div class="item half"></div>
+    <div class="item full"></div>
   </div>
-  <div class="full static" style="margin: 10px auto; width: 400px;"></div>
+  <div class="container two wrapped">
+    <div class="item full"></div>
+    <div class="item"></div>
+    <div class="item half"></div>
+  </div>
 </div>
 
-<h1>Custom Spacer Float</h1>
+<h1>fluid</h1>
 <div class="container one">
-  <div class="manual_spacer">
-    <div class="item float use_manual">
-      <iframe src="http://leafo.net/hi.png" frameborder="0"></iframe>
-    </div>
-  </div>
-
-  <div class="item float right">
-    <iframe src="http://leafo.net/hi.png" frameborder="0"></iframe>
-  </div>
-
-  <div class="full static" style="margin: 10px auto; width: 400px;"></div>
+  <div class="item fluid"></div>
+  <div class="item fluid half"></div>
+  <div class="item fluid full"></div>
 </div>
 
 <div class="full"></div>
@@ -220,11 +226,9 @@
     }
 
     function attach() {
-      $(".container .item:not(.use_manual)").stick_in_parent();
-
-      $(".container .item.use_manual").stick_in_parent({
-        parent: ".container",
-        spacer: ".manual_spacer"
+      $(".container:not(.wrapped) .item").stick_in_parent();
+      $(".container.wrapped .item").stick_in_parent({
+        scrollable: ".wrapper"
       });
     }
 
