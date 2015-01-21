@@ -5,18 +5,16 @@
  */
 
 (function() {
-  var $, win;
+  var $;
 
   $ = this.jQuery || window.jQuery;
 
-  win = $(window);
-
   $.fn.stick_in_parent = function(opts) {
-    var elm, enable_bottoming, inner_scrolling, manual_spacer, offset_top, parent_selector, recalc_every, sticky_class, _fn, _i, _len;
+    var elm, enable_bottoming, inner_scrolling, manual_spacer, offset_top, parent_selector, recalc_every, scrolling_parent, sticky_class, _fn, _i, _len;
     if (opts == null) {
       opts = {};
     }
-    sticky_class = opts.sticky_class, inner_scrolling = opts.inner_scrolling, recalc_every = opts.recalc_every, parent_selector = opts.parent, offset_top = opts.offset_top, manual_spacer = opts.spacer, enable_bottoming = opts.bottoming;
+    sticky_class = opts.sticky_class, inner_scrolling = opts.inner_scrolling, recalc_every = opts.recalc_every, parent_selector = opts.parent, offset_top = opts.offset_top, manual_spacer = opts.spacer, enable_bottoming = opts.bottoming, scrolling_parent = opts.scrolling_parent;
     if (offset_top == null) {
       offset_top = 0;
     }
@@ -33,11 +31,25 @@
       enable_bottoming = true;
     }
     _fn = function(elm, padding_bottom, parent_top, parent_height, top, height, el_float, detached) {
-      var bottomed, detach, fixed, last_pos, offset, parent, recalc, recalc_and_tick, recalc_counter, spacer, tick;
+      var bottomed, detach, fixed, last_pos, offset, parent, recalc, recalc_and_tick, recalc_counter, spacer, tick, win, win_top;
       if (elm.data("sticky_kit")) {
         return;
       }
       elm.data("sticky_kit", true);
+      win = $(window);
+      if (scrolling_parent) {
+        win = elm.parent().closest(scrolling_parent);
+      }
+      win_top = function() {
+        var border_top, padding_top;
+        if (scrolling_parent) {
+          border_top = parseInt(win.css("border-top-width"), 10);
+          padding_top = parseInt(win.css("padding-top"), 10);
+          return win.offset().top + padding_top + border_top;
+        } else {
+          return 0;
+        }
+      };
       parent = elm.parent();
       if (parent_selector != null) {
         parent = parent.closest(parent_selector);
@@ -76,7 +88,7 @@
           }).removeClass(sticky_class);
           restore = true;
         }
-        top = elm.offset().top - (parseInt(elm.css("margin-top"), 10) || 0) - offset_top;
+        top = elm.offset().top - (parseInt(elm.css("margin-top"), 10) || 0) - offset_top - win_top();
         height = elm.outerHeight(true);
         el_float = elm.css("float");
         if (spacer) {
@@ -97,7 +109,7 @@
         return;
       }
       last_pos = void 0;
-      offset = offset_top;
+      offset = offset_top + win_top();
       recalc_counter = recalc_every;
       tick = function() {
         var css, delta, scroll, will_bottom, win_height;
@@ -130,7 +142,7 @@
           }
           if (scroll < top) {
             fixed = false;
-            offset = offset_top;
+            offset = offset_top + win_top();
             if (manual_spacer == null) {
               if (el_float === "left" || el_float === "right") {
                 elm.insertAfter(spacer);
@@ -150,7 +162,7 @@
               if (!bottomed) {
                 offset -= delta;
                 offset = Math.max(win_height - height, offset);
-                offset = Math.min(offset_top, offset);
+                offset = Math.min(offset_top + win_top(), offset);
                 if (fixed) {
                   elm.css({
                     top: offset + "px"
@@ -164,10 +176,11 @@
             fixed = true;
             css = {
               position: "fixed",
-              top: offset
+              top: offset + "px"
             };
             css.width = elm.css("box-sizing") === "border-box" ? elm.outerWidth() + "px" : elm.width() + "px";
             elm.css(css).addClass(sticky_class);
+            spacer.width(css.width);
             if (manual_spacer == null) {
               elm.after(spacer);
               if (el_float === "left" || el_float === "right") {
@@ -204,7 +217,9 @@
         detached = true;
         win.off("touchmove", tick);
         win.off("scroll", tick);
-        win.off("resize", recalc_and_tick);
+        $(window).off("touchmove", tick);
+        $(window).off("scroll", tick);
+        $(window).off("resize", recalc_and_tick);
         $(document.body).off("sticky_kit:recalc", recalc_and_tick);
         elm.off("sticky_kit:detach", detach);
         elm.removeData("sticky_kit");
@@ -227,7 +242,9 @@
       };
       win.on("touchmove", tick);
       win.on("scroll", tick);
-      win.on("resize", recalc_and_tick);
+      $(window).on("touchmove", tick);
+      $(window).on("scroll", tick);
+      $(window).on("resize", recalc_and_tick);
       $(document.body).on("sticky_kit:recalc", recalc_and_tick);
       elm.on("sticky_kit:detach", detach);
       return setTimeout(tick, 0);
