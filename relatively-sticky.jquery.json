@@ -1,23 +1,20 @@
 {
-  "name": "sticky-kit",
+  "name": "relatively-sticky",
   "version": "1.1.1",
 
-  "title": "Sticky-kit",
-  "homepage": "http://leafo.net/sticky-kit",
+  "title": "Relatively-Sticky",
+  "homepage": "https://github.com/xi/relatively-sticky",
   "description": "A jQuery plugin for making smart sticky elements.",
-
-  "demo": "http://leafo.net/sticky-kit",
 
   "keywords": [
     "sticky",
-    "fixed",
     "scrolling",
     "ui"
   ],
 
   "author": {
-    "name": "Leaf Corcoran",
-    "email": "leafot@gmail.com",
+    "name": "Tobias Bengfort",
+    "email": "tobias.bengfort@posteo.de",
     "url": "http://leafo.net"
   },
 

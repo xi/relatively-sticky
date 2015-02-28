@@ -1,6 +1,6 @@
 
-jquery.sticky-kit.min.js: jquery.sticky-kit.js
+jquery.relatively-sticky.min.js: jquery.relatively-sticky.js
 	uglifyjs --comments @license $< -o $@
 
-jquery.sticky-kit.js: jquery.sticky-kit.coffee
+jquery.relatively-sticky.js: jquery.relatively-sticky.coffee
 	coffee -c $<
