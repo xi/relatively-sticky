@@ -1,6 +1,6 @@
 
 jquery.sticky-kit.min.js: jquery.sticky-kit.js
-	closure --language_in=ECMASCRIPT5 $< > $@
+	uglifyjs --comments @license $< -o $@
 
 jquery.sticky-kit.js: jquery.sticky-kit.coffee
 	coffee -c $<
