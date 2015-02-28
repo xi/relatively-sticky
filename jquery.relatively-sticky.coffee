@@ -1,5 +1,5 @@
 ###*
-@license Relatively-Sticky v1.1.1 | WTFPL | Tobias Bengfort 2015
+@license Relatively-Sticky v2.0.0 | WTFPL | Tobias Bengfort 2015
 ###
 
 $ = @jQuery or window.jQuery
