@@ -1,8 +1,6 @@
 # Relatively Sticky
 
-This is work in progress.
-
-*relatively sticky* is planned to be a drop-in replacement for the excellent
+*relatively sticky* is a drop-in replacement for the excellent
 [sticky-kit](https://github.com/leafo/sticky-kit). The idea was to be able to
 have sticky elements within any scrollable element, not only window. But from
 the simple idea this grew into a rewrite of more or less the whole project.
